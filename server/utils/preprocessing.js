@@ -10,12 +10,11 @@ try {
   featureMap = fs.existsSync(featureMapPath) 
     ? JSON.parse(fs.readFileSync(featureMapPath, 'utf8'))
     : {
-        location_map: {
-          'San Francisco, CA': 0,
-          'New York, NY': 1,
-          'Austin, TX': 2,
-          'Seattle, WA': 3,
-          'Chicago, IL': 4
+        ocean_proximity_map: {
+          'NEAR BAY': 0,
+          'NEAR OCEAN': 1,
+          '>1H OCEAN': 2,
+          'INLAND': 3
         },
         property_type_map: {
           'single-family': 0,
@@ -29,12 +28,11 @@ try {
   console.error('Error loading feature map:', error);
   // Fallback to default feature map
   featureMap = {
-    location_map: {
-      'San Francisco, CA': 0,
-      'New York, NY': 1,
-      'Austin, TX': 2,
-      'Seattle, WA': 3,
-      'Chicago, IL': 4
+    ocean_proximity_map: {
+      'NEAR BAY': 0,
+      'NEAR OCEAN': 1,
+      '>1H OCEAN': 2,
+      'INLAND': 3
     },
     property_type_map: {
       'single-family': 0,
@@ -59,7 +57,7 @@ exports.preprocessing = (property, metadata) => {
       squareFeet,
       bedrooms,
       bathrooms,
-      location,
+      oceanProximity,
       yearBuilt,
       propertyType,
       lotSize = 0,
@@ -75,23 +73,30 @@ exports.preprocessing = (property, metadata) => {
     const normalizedYearBuilt = (yearBuilt - 1900) / 123;
     const normalizedLotSize = lotSize / 10000;
 
-    // One-hot encode location
-    const locationVector = [];
-    const locationKey = location.toLowerCase().trim();
+    // Map ocean proximity string to canonical format
+    let proximityKey;
+    const proximityVal = oceanProximity.toLowerCase();
+    if (proximityVal === 'near-bay') proximityKey = 'NEAR BAY';
+    else if (proximityVal === 'near-ocean') proximityKey = 'NEAR OCEAN';
+    else if (proximityVal === '1h-ocean') proximityKey = '>1H OCEAN';
+    else proximityKey = 'INLAND';
+
+    // One-hot encode ocean proximity
+    const oceanProximityVector = [];
     
-    // Get the number of unique locations from metadata (subtracting 1 for the reference level)
-    const locationMapEntries = Object.entries(featureMap.location_map);
-    const numLocations = locationMapEntries.length - 1;
+    // Get the number of unique ocean proximity values from metadata (subtracting 1 for the reference level)
+    const oceanProximityMapEntries = Object.entries(featureMap.ocean_proximity_map);
+    const numProximities = oceanProximityMapEntries.length - 1;
     
     // Initialize with all zeros
-    for (let i = 0; i < numLocations; i++) {
-      locationVector.push(0);
+    for (let i = 0; i < numProximities; i++) {
+      oceanProximityVector.push(0);
     }
     
-    // Find the location index (skipping the reference level)
-    for (const [loc, idx] of locationMapEntries) {
-      if (idx > 0 && locationKey.includes(loc.toLowerCase())) {
-        locationVector[idx - 1] = 1;
+    // Find the ocean proximity index (skipping the reference level)
+    for (const [prox, idx] of oceanProximityMapEntries) {
+      if (idx > 0 && proximityKey === prox) {
+        oceanProximityVector[idx - 1] = 1;
         break;
       }
     }
@@ -128,7 +133,7 @@ exports.preprocessing = (property, metadata) => {
       normalizedBathrooms,
       normalizedYearBuilt,
       normalizedLotSize,
-      ...locationVector,
+      ...oceanProximityVector,
       ...propertyTypeVector,
       garageFeature,
       poolFeature

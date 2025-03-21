@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Home, Ruler, DollarSign, Building, MapPin, Bed, Bath, Calendar, ArrowRight } from 'lucide-react';
+import { Home, Ruler, DollarSign, Building, MapPin, Bed, Bath, Calendar, ArrowRight, Waves } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
@@ -19,7 +19,7 @@ interface PropertyData {
   bedrooms: number;
   bathrooms: number;
   squareFeet: number;
-  location: string;
+  oceanProximity: string;
   yearBuilt: number;
 }
 
@@ -30,19 +30,15 @@ const getPredictedPrice = (data: PropertyData): number => {
   
   // Base price factors
   const basePrice = 200000;
-  const locationFactors: Record<string, number> = {
-    'san-francisco': 1500000,
-    'new-york': 1200000,
-    'chicago': 400000,
-    'miami': 600000,
-    'los-angeles': 1000000,
-    'seattle': 800000,
-    'austin': 500000,
-    'denver': 550000,
+  const oceanProximityFactors: Record<string, number> = {
+    'near-bay': 1500000,
+    'near-ocean': 1200000,
+    '1h-ocean': 400000,
+    'inland': 350000,
   };
   
   // Calculate price based on inputs
-  let price = locationFactors[data.location] || basePrice;
+  let price = oceanProximityFactors[data.oceanProximity] || basePrice;
   
   // Adjust for property type
   if (data.propertyType === 'condo') price *= 0.8;
@@ -74,7 +70,7 @@ const PredictorForm = () => {
     bedrooms: 3,
     bathrooms: 2,
     squareFeet: 2000,
-    location: 'san-francisco',
+    oceanProximity: 'near-bay',
     yearBuilt: 2000,
   });
   
@@ -158,28 +154,24 @@ const PredictorForm = () => {
                 </Select>
               </div>
               
-              {/* Location */}
+              {/* Ocean Proximity */}
               <div className="space-y-2">
                 <label className="flex items-center text-sm font-medium">
-                  <MapPin className="h-4 w-4 mr-2 text-primary" />
-                  Location
+                  <Waves className="h-4 w-4 mr-2 text-primary" />
+                  Ocean Proximity
                 </label>
                 <Select
-                  value={propertyData.location}
-                  onValueChange={(value) => handleChange('location', value)}
+                  value={propertyData.oceanProximity}
+                  onValueChange={(value) => handleChange('oceanProximity', value)}
                 >
                   <SelectTrigger className="input-glass">
-                    <SelectValue placeholder="Select location" />
+                    <SelectValue placeholder="Select ocean proximity" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="san-francisco">San Francisco, CA</SelectItem>
-                    <SelectItem value="new-york">New York, NY</SelectItem>
-                    <SelectItem value="chicago">Chicago, IL</SelectItem>
-                    <SelectItem value="miami">Miami, FL</SelectItem>
-                    <SelectItem value="los-angeles">Los Angeles, CA</SelectItem>
-                    <SelectItem value="seattle">Seattle, WA</SelectItem>
-                    <SelectItem value="austin">Austin, TX</SelectItem>
-                    <SelectItem value="denver">Denver, CO</SelectItem>
+                    <SelectItem value="near-bay">NEAR BAY</SelectItem>
+                    <SelectItem value="near-ocean">NEAR OCEAN</SelectItem>
+                    <SelectItem value="1h-ocean">&gt;1H OCEAN</SelectItem>
+                    <SelectItem value="inland">INLAND</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -343,9 +335,10 @@ const PredictorForm = () => {
                       </span>
                     </div>
                     <div className="flex items-center">
-                      <MapPin className="h-4 w-4 mr-2 text-muted-foreground" />
+                      <Waves className="h-4 w-4 mr-2 text-muted-foreground" />
                       <span className="text-muted-foreground">
-                        {propertyData.location.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+                        {propertyData.oceanProximity === "1h-ocean" ? ">1H OCEAN" : 
+                         propertyData.oceanProximity.replace('-', ' ').toUpperCase()}
                       </span>
                     </div>
                     <div className="flex items-center">

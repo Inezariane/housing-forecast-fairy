@@ -1,3 +1,4 @@
+
 const path = require('path');
 const tf = require('@tensorflow/tfjs-node');
 const { preprocessing } = require('../utils/preprocessing');
@@ -22,7 +23,7 @@ exports.predictPrice = async (req, res) => {
       squareFeet,
       bedrooms,
       bathrooms,
-      location,
+      oceanProximity,
       yearBuilt,
       propertyType,
       lotSize,
@@ -31,7 +32,7 @@ exports.predictPrice = async (req, res) => {
     } = req.body;
 
     // Validate input
-    if (!squareFeet || !bedrooms || !bathrooms || !location || !yearBuilt || !propertyType) {
+    if (!squareFeet || !bedrooms || !bathrooms || !oceanProximity || !yearBuilt || !propertyType) {
       return res.status(400).json({ error: 'Missing required property information' });
     }
 
@@ -45,7 +46,7 @@ exports.predictPrice = async (req, res) => {
       squareFeet,
       bedrooms,
       bathrooms,
-      location,
+      oceanProximity,
       yearBuilt,
       propertyType,
       lotSize,
@@ -67,7 +68,7 @@ exports.predictPrice = async (req, res) => {
     return res.status(200).json({
       predictedPrice: Math.round(predictedPrice),
       confidence: 0.85, // Placeholder - would be calculated from model in production
-      comparableProperties: generateComparableProperties(predictedPrice, location)
+      comparableProperties: generateComparableProperties(predictedPrice, oceanProximity)
     });
   } catch (error) {
     console.error('Prediction error:', error);
@@ -78,13 +79,13 @@ exports.predictPrice = async (req, res) => {
 // Controller for getting price history
 exports.getPriceHistory = async (req, res) => {
   try {
-    const { location } = req.query;
+    const { oceanProximity } = req.query;
 
-    if (!location) {
-      return res.status(400).json({ error: 'Location is required' });
+    if (!oceanProximity) {
+      return res.status(400).json({ error: 'Ocean proximity is required' });
     }
 
-    const priceHistoryData = generatePriceHistoryData(location);
+    const priceHistoryData = generatePriceHistoryData(oceanProximity);
     return res.status(200).json({ priceHistory: priceHistoryData });
   } catch (error) {
     console.error('Error fetching price history:', error);
@@ -121,7 +122,7 @@ exports.getSavedProperties = async (req, res) => {
 };
 
 // Helper function to generate comparable properties
-function generateComparableProperties(basePrice, location) {
+function generateComparableProperties(basePrice, oceanProximity) {
   const comparableProperties = [];
   const priceRange = 0.1; // 10% above and below the base price
   const minPrice = basePrice * (1 - priceRange);
@@ -131,7 +132,7 @@ function generateComparableProperties(basePrice, location) {
   for (let i = 0; i < 3; i++) {
     const randomPrice = Math.random() * (maxPrice - minPrice) + minPrice;
     comparableProperties.push({
-      address: `${Math.floor(Math.random() * 1000)} Random St, ${location}`,
+      address: `${Math.floor(Math.random() * 1000)} Random St, (${oceanProximity.toUpperCase()})`,
       price: Math.round(randomPrice),
       bedrooms: Math.floor(Math.random() * 5) + 2,
       bathrooms: Math.floor(Math.random() * 3) + 2,
@@ -143,14 +144,32 @@ function generateComparableProperties(basePrice, location) {
 }
 
 // Helper function to generate price history data
-function generatePriceHistoryData(location) {
+function generatePriceHistoryData(oceanProximity) {
   const priceHistory = [];
   const currentDate = new Date();
+
+  // Base price varies by ocean proximity
+  let basePrice = 500000;
+  
+  switch(oceanProximity.toLowerCase()) {
+    case 'near-bay':
+      basePrice = 800000;
+      break;
+    case 'near-ocean':
+      basePrice = 900000;
+      break;
+    case '1h-ocean':
+      basePrice = 500000;
+      break;
+    case 'inland':
+      basePrice = 350000;
+      break;
+  }
 
   // Generate price data for the last 12 months
   for (let i = 11; i >= 0; i--) {
     const month = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1);
-    const price = 500000 + (i * 5000) + (Math.random() * 20000); // Base price + trend + random fluctuation
+    const price = basePrice + (i * 5000) + (Math.random() * 20000); // Base price + trend + random fluctuation
     priceHistory.push({
       month: month.toISOString().slice(0, 7), // YYYY-MM
       averagePrice: Math.round(price)

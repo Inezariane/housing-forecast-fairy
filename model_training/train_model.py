@@ -50,7 +50,7 @@ def load_and_preprocess_data():
     
     # Create feature map for categorical variables
     feature_map = {
-        'location_map': {k: i for i, k in enumerate(df['location'].unique())},
+        'ocean_proximity_map': {k: i for i, k in enumerate(df['ocean_proximity'].unique())},
         'property_type_map': {k: i for i, k in enumerate(df['property_type'].unique())}
     }
     
@@ -63,7 +63,7 @@ def load_and_preprocess_data():
     if 'lot_size' in X.columns:
         numeric_features.append('lot_size')
     
-    categorical_features = ['location', 'property_type']
+    categorical_features = ['ocean_proximity', 'property_type']
     binary_features = []
     
     if 'has_garage' in X.columns:
