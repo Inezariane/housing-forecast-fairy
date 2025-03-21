@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Home, Ruler, DollarSign, Building, MapPin, Bed, Bath, Calendar, ArrowRight, Waves } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -31,10 +30,10 @@ const getPredictedPrice = (data: PropertyData): number => {
   // Base price factors
   const basePrice = 200000;
   const oceanProximityFactors: Record<string, number> = {
-    'near-bay': 1500000,
-    'near-ocean': 1200000,
-    '1h-ocean': 400000,
-    'inland': 350000,
+    'NEAR BAY': 1500000,
+    'NEAR OCEAN': 1200000,
+    '<1H OCEAN': 400000,
+    'INLAND': 350000,
   };
   
   // Calculate price based on inputs
@@ -70,7 +69,7 @@ const PredictorForm = () => {
     bedrooms: 3,
     bathrooms: 2,
     squareFeet: 2000,
-    oceanProximity: 'near-bay',
+    oceanProximity: 'NEAR BAY',
     yearBuilt: 2000,
   });
   
@@ -168,10 +167,10 @@ const PredictorForm = () => {
                     <SelectValue placeholder="Select ocean proximity" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="near-bay">NEAR BAY</SelectItem>
-                    <SelectItem value="near-ocean">NEAR OCEAN</SelectItem>
-                    <SelectItem value="1h-ocean">&gt;1H OCEAN</SelectItem>
-                    <SelectItem value="inland">INLAND</SelectItem>
+                    <SelectItem value="NEAR BAY">NEAR BAY</SelectItem>
+                    <SelectItem value="NEAR OCEAN">NEAR OCEAN</SelectItem>
+                    <SelectItem value="<1H OCEAN">&lt;1H OCEAN</SelectItem>
+                    <SelectItem value="INLAND">INLAND</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -337,8 +336,7 @@ const PredictorForm = () => {
                     <div className="flex items-center">
                       <Waves className="h-4 w-4 mr-2 text-muted-foreground" />
                       <span className="text-muted-foreground">
-                        {propertyData.oceanProximity === "1h-ocean" ? ">1H OCEAN" : 
-                         propertyData.oceanProximity.replace('-', ' ').toUpperCase()}
+                        {propertyData.oceanProximity}
                       </span>
                     </div>
                     <div className="flex items-center">

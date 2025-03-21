@@ -132,7 +132,7 @@ function generateComparableProperties(basePrice, oceanProximity) {
   for (let i = 0; i < 3; i++) {
     const randomPrice = Math.random() * (maxPrice - minPrice) + minPrice;
     comparableProperties.push({
-      address: `${Math.floor(Math.random() * 1000)} Random St, (${oceanProximity.toUpperCase()})`,
+      address: `${Math.floor(Math.random() * 1000)} Random St, (${oceanProximity})`,
       price: Math.round(randomPrice),
       bedrooms: Math.floor(Math.random() * 5) + 2,
       bathrooms: Math.floor(Math.random() * 3) + 2,
@@ -151,17 +151,17 @@ function generatePriceHistoryData(oceanProximity) {
   // Base price varies by ocean proximity
   let basePrice = 500000;
   
-  switch(oceanProximity.toLowerCase()) {
-    case 'near-bay':
+  switch(oceanProximity) {
+    case 'NEAR BAY':
       basePrice = 800000;
       break;
-    case 'near-ocean':
+    case 'NEAR OCEAN':
       basePrice = 900000;
       break;
-    case '1h-ocean':
+    case '<1H OCEAN':
       basePrice = 500000;
       break;
-    case 'inland':
+    case 'INLAND':
       basePrice = 350000;
       break;
   }

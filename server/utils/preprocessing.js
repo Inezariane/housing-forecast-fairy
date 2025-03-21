@@ -13,7 +13,7 @@ try {
         ocean_proximity_map: {
           'NEAR BAY': 0,
           'NEAR OCEAN': 1,
-          '>1H OCEAN': 2,
+          '<1H OCEAN': 2,
           'INLAND': 3
         },
         property_type_map: {
@@ -31,7 +31,7 @@ try {
     ocean_proximity_map: {
       'NEAR BAY': 0,
       'NEAR OCEAN': 1,
-      '>1H OCEAN': 2,
+      '<1H OCEAN': 2,
       'INLAND': 3
     },
     property_type_map: {
@@ -74,12 +74,7 @@ exports.preprocessing = (property, metadata) => {
     const normalizedLotSize = lotSize / 10000;
 
     // Map ocean proximity string to canonical format
-    let proximityKey;
-    const proximityVal = oceanProximity.toLowerCase();
-    if (proximityVal === 'near-bay') proximityKey = 'NEAR BAY';
-    else if (proximityVal === 'near-ocean') proximityKey = 'NEAR OCEAN';
-    else if (proximityVal === '1h-ocean') proximityKey = '>1H OCEAN';
-    else proximityKey = 'INLAND';
+    let proximityKey = oceanProximity;
 
     // One-hot encode ocean proximity
     const oceanProximityVector = [];
