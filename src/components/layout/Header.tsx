@@ -55,52 +55,6 @@ const Header = () => {
             HomeValue<span className="text-primary">AI</span>
           </span>
         </Link>
-
-        {/* Desktop Menu */}
-        <nav className="hidden md:flex items-center space-x-6">
-          {navItems.map((item) => (
-            <Link
-              key={item.name}
-              to={item.path}
-              className="flex items-center text-muted-foreground hover:text-foreground transition-colors duration-200"
-            >
-              {item.icon}
-              {item.name}
-            </Link>
-          ))}
-          <Button>Get Started</Button>
-        </nav>
-
-        {/* Mobile Menu Button */}
-        <button
-          className="md:hidden text-primary p-2 rounded-md hover:bg-primary/5 transition-colors duration-200"
-          onClick={toggleMobileMenu}
-          aria-label="Toggle menu"
-        >
-          {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </button>
-
-        {/* Mobile Menu */}
-        {isMobile && mobileMenuOpen && (
-          <div className="absolute top-full left-0 right-0 bg-white/95 backdrop-blur-lg shadow-medium animate-slide-down p-4 border-t border-gray-100">
-            <nav className="flex flex-col space-y-3 py-2">
-              {navItems.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.path}
-                  className="flex items-center p-2 hover:bg-primary/5 rounded-md transition-colors duration-200"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {item.icon}
-                  {item.name}
-                </Link>
-              ))}
-              <Button className="mt-2 w-full" onClick={() => setMobileMenuOpen(false)}>
-                Get Started
-              </Button>
-            </nav>
-          </div>
-        )}
       </div>
     </header>
   );

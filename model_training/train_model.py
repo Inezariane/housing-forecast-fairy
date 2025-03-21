@@ -1,11 +1,3 @@
-
-"""
-House Price Prediction Model Training Script
-
-This script trains a machine learning model to predict house prices based on various features
-such as square footage, number of bedrooms, location, etc.
-"""
-
 import os
 import numpy as np
 import pandas as pd
@@ -23,7 +15,7 @@ np.random.seed(42)
 tf.random.set_seed(42)
 
 # Paths
-DATA_PATH = os.path.join(os.path.dirname(__file__), 'data/housing_data.csv')
+DATA_PATH = os.path.join(os.path.dirname(__file__), 'housing.csv')
 MODEL_SAVE_PATH = os.path.join(os.path.dirname(__file__), '../server/trained_models')
 MODEL_JSON_PATH = os.path.join(MODEL_SAVE_PATH, 'model.json')
 SCALER_PATH = os.path.join(MODEL_SAVE_PATH, 'scaler.pkl')
@@ -33,7 +25,6 @@ FEATURE_MAP_PATH = os.path.join(MODEL_SAVE_PATH, 'feature_map.json')
 os.makedirs(MODEL_SAVE_PATH, exist_ok=True)
 
 def load_and_preprocess_data():
-    """Load and preprocess the housing data"""
     print("Loading data from", DATA_PATH)
     df = pd.read_csv(DATA_PATH)
     
@@ -117,7 +108,6 @@ def load_and_preprocess_data():
     return X_train_processed, X_test_processed, y_train, y_test, feature_names
 
 def build_model(input_shape):
-    """Build and compile the neural network model"""
     model = keras.Sequential([
         keras.layers.Dense(128, activation='relu', input_shape=[input_shape]),
         keras.layers.Dropout(0.3),
@@ -136,7 +126,6 @@ def build_model(input_shape):
     return model
 
 def train_model(model, X_train, y_train, X_test, y_test):
-    """Train the model and evaluate performance"""
     # Define callbacks
     early_stopping = keras.callbacks.EarlyStopping(
         monitor='val_loss',
