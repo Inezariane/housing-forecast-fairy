@@ -1,4 +1,3 @@
-
 const path = require('path');
 const tf = require('@tensorflow/tfjs-node');
 const { preprocessing } = require('../utils/preprocessing');
@@ -28,7 +27,7 @@ exports.predictPrice = async (req, res) => {
       propertyType,
       lotSize,
       hasGarage,
-      hasPool
+      hasPool,
     } = req.body;
 
     // Validate input
@@ -42,17 +41,20 @@ exports.predictPrice = async (req, res) => {
     }
 
     // Preprocess input data
-    const processedData = preprocessing({
-      squareFeet,
-      bedrooms,
-      bathrooms,
-      oceanProximity,
-      yearBuilt,
-      propertyType,
-      lotSize,
-      hasGarage,
-      hasPool
-    }, modelData.metadata);
+    const processedData = preprocessing(
+      {
+        squareFeet,
+        bedrooms,
+        bathrooms,
+        oceanProximity,
+        yearBuilt,
+        propertyType,
+        lotSize,
+        hasGarage,
+        hasPool,
+      },
+      modelData.metadata
+    );
 
     // Convert to tensor
     const inputTensor = tf.tensor2d([processedData]);
@@ -68,7 +70,7 @@ exports.predictPrice = async (req, res) => {
     return res.status(200).json({
       predictedPrice: Math.round(predictedPrice),
       confidence: 0.85, // Placeholder - would be calculated from model in production
-      comparableProperties: generateComparableProperties(predictedPrice, oceanProximity)
+      comparableProperties: generateComparableProperties(predictedPrice, oceanProximity),
     });
   } catch (error) {
     console.error('Prediction error:', error);
@@ -96,9 +98,10 @@ exports.getPriceHistory = async (req, res) => {
 // Controller for saving a property
 exports.saveProperty = async (req, res) => {
   try {
+    const { propertyData, predictedPrice } = req.body;
+
     // In a real application, you would save the property to a database
-    const propertyDetails = req.body;
-    console.log('Property saved:', propertyDetails);
+    console.log('Property saved:', { propertyData, predictedPrice });
     return res.status(200).json({ message: 'Property saved successfully' });
   } catch (error) {
     console.error('Error saving property:', error);
@@ -112,7 +115,7 @@ exports.getSavedProperties = async (req, res) => {
     // In a real application, you would retrieve the properties from a database
     const savedProperties = [
       { id: 1, address: '123 Main St', price: 550000 },
-      { id: 2, address: '456 Oak Ave', price: 720000 }
+      { id: 2, address: '456 Oak Ave', price: 720000 },
     ];
     return res.status(200).json({ savedProperties });
   } catch (error) {
@@ -136,7 +139,7 @@ function generateComparableProperties(basePrice, oceanProximity) {
       price: Math.round(randomPrice),
       bedrooms: Math.floor(Math.random() * 5) + 2,
       bathrooms: Math.floor(Math.random() * 3) + 2,
-      squareFeet: Math.floor(Math.random() * 500) + 1500
+      squareFeet: Math.floor(Math.random() * 500) + 1500,
     });
   }
 
@@ -150,8 +153,8 @@ function generatePriceHistoryData(oceanProximity) {
 
   // Base price varies by ocean proximity
   let basePrice = 500000;
-  
-  switch(oceanProximity) {
+
+  switch (oceanProximity) {
     case 'NEAR BAY':
       basePrice = 800000;
       break;
@@ -169,10 +172,10 @@ function generatePriceHistoryData(oceanProximity) {
   // Generate price data for the last 12 months
   for (let i = 11; i >= 0; i--) {
     const month = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1);
-    const price = basePrice + (i * 5000) + (Math.random() * 20000); // Base price + trend + random fluctuation
+    const price = basePrice + i * 5000 + Math.random() * 20000; // Base price + trend + random fluctuation
     priceHistory.push({
       month: month.toISOString().slice(0, 7), // YYYY-MM
-      averagePrice: Math.round(price)
+      averagePrice: Math.round(price),
     });
   }
 

@@ -50,8 +50,8 @@ def load_and_preprocess_data():
     
     # Create feature map for categorical variables
     feature_map = {
-        'ocean_proximity_map': {k: i for i, k in enumerate(df['ocean_proximity'].unique())},
-        'property_type_map': {k: i for i, k in enumerate(df['property_type'].unique())}
+        'oceanProximity_map': {k: i for i, k in enumerate(df['oceanProximity'].unique())},
+        'propertyType_map': {k: i for i, k in enumerate(df['propertyType'].unique())}
     }
     
     # Save feature map
@@ -59,11 +59,11 @@ def load_and_preprocess_data():
         json.dump(feature_map, f)
     
     # Define numeric and categorical features
-    numeric_features = ['square_feet', 'bedrooms', 'bathrooms', 'year_built']
+    numeric_features = ['squareFeet', 'bedrooms', 'bathrooms', 'yearBuilt']
     if 'lot_size' in X.columns:
         numeric_features.append('lot_size')
     
-    categorical_features = ['ocean_proximity', 'property_type']
+    categorical_features = ['oceanProximity', 'propertyType']
     binary_features = []
     
     if 'has_garage' in X.columns:
@@ -73,7 +73,7 @@ def load_and_preprocess_data():
     
     # Create preprocessor
     numeric_transformer = StandardScaler()
-    categorical_transformer = OneHotEncoder(drop='first', sparse=False)
+    categorical_transformer = OneHotEncoder(drop='first')
     
     preprocessor = ColumnTransformer(
         transformers=[

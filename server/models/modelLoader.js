@@ -9,9 +9,10 @@ const fs = require('fs');
  */
 exports.loadModel = async () => {
   try {
-    const modelDir = path.join(__dirname, '../trained_models');
-    const modelPath = path.join(modelDir, 'tfjs_model/model.json');
-    const metadataPath = path.join(modelDir, 'model.json');
+    const modelDir = path.join(__dirname, '../server/trained_models');  
+    const modelPath = path.join(modelDir, 'tfjs_model/model.json');    
+    const metadataPath = path.join(modelDir, 'model.json');            
+    // const scalerPath = path.join(modelDir, 'scaler.pkl');       
     
     // Check if model exists
     if (!fs.existsSync(modelPath)) {
