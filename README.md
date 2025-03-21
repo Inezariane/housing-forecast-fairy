@@ -1,69 +1,59 @@
-# Welcome to your Lovable project
 
-## Project info
+# HomeValueAI
 
-**URL**: https://lovable.dev/projects/bfe3ae65-ad16-405b-9245-eea1c9f9b0d3
+HomeValueAI is a comprehensive property valuation application that uses machine learning to predict house prices based on various property features and location data.
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+- 🏠 AI-powered property price prediction
+- 📊 Interactive price history visualization
+- 🔍 Detailed property analysis
+- 📱 Responsive design for all devices
+- 🔒 Modern and intuitive user interface
 
-**Use Lovable**
+## Tech Stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/bfe3ae65-ad16-405b-9245-eea1c9f9b0d3) and start prompting.
+### Frontend
+- React with TypeScript
+- Tailwind CSS
+- shadcn/ui component library
+- Recharts for data visualization
+- React Router for navigation
 
-Changes made via Lovable will be committed automatically to this repo.
+### Backend
+- Node.js with Express
+- TensorFlow.js for model inference
+- RESTful API architecture
 
-**Use your preferred IDE**
+### Machine Learning
+- Python with TensorFlow for model training
+- scikit-learn for data preprocessing
+- Model conversion to TensorFlow.js format
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## Getting Started
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+See [INTEGRATION.md](INTEGRATION.md) for detailed setup and integration instructions.
 
-Follow these steps:
+## Project Structure
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```
+home-value-ai/
+├── src/                   # Frontend source code
+│   ├── components/        # React components
+│   ├── pages/             # App pages
+│   ├── utils/             # Utility functions
+│   └── ...
+├── server/                # Node.js backend
+│   ├── controllers/       # API controllers
+│   ├── models/            # Model loaders
+│   ├── routes/            # API routes
+│   ├── trained_models/    # Saved ML models
+│   └── utils/             # Backend utilities
+└── model_training/        # Python model training
+    ├── data/              # Training data
+    └── train_model.py     # Training script
 ```
 
-**Edit a file directly in GitHub**
+## License
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with .
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/bfe3ae65-ad16-405b-9245-eea1c9f9b0d3) and click on Share -> Publish.
-
-## I want to use a custom domain - is that possible?
-
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+[MIT](LICENSE)
